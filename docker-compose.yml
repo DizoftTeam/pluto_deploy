@@ -9,6 +9,8 @@ services:
     volumes:
       - ./services/nginx/hosts:/etc/nginx/conf.d
       - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '${PLUTO_NGINX_PORT}:80'
     links:
       - pluto_api
 

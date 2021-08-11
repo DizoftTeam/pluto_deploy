@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  # Proxy NGINX
+  pluto_nginx:
+    container_name: pluto_nginx
+    image: nginx:1.21.1-alpine
+    restart: always
+    volumes:
+      - ./services/nginx/hosts:/etc/nginx/conf.d
+      - /etc/localtime:/etc/localtime:ro
+    links:
+      - pluto_api
+
+  # Database (PostgreSQL)
+  pluto_db:
+    container_name: pluto_db
+    image: postgres:13.3-alpine
+    environment:
+      POSTGRES_PASSWORD: ${PLUTO_DB_PASSWORD}
+    volumes:
+      - pluto_db:/var/lib/postgresql/data
+      - ./services/db/init/:/docker-entrypoint-initdb.d/
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - '${PLUTO_DB_PORT}:5432'
+    expose:
+      - '5432'
+
+  # Backend
+  pluto_api:
+    container_name: pluto_api
+    image: dizoft.ru:5001/pluto_api_image:latest
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://puser:2580@pluto_db:5432/pluto_api?serverVersion=13&charset=utf8
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    expose:
+      - '9000'
+    links:
+      - pluto_db
+
+volumes:
+  pluto_db:

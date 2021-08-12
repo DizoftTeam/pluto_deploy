@@ -43,5 +43,17 @@ services:
     links:
       - pluto_db
 
+  # Flutter UI
+  pluto_ui:
+    container_name: pluto_ui
+    image: dizoft.ru:5001/pluto_ui_image:latest
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    expose:
+      - '80'
+    links:
+      - pluto_api
+
 volumes:
   pluto_db:

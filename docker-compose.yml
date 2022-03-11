@@ -4,7 +4,7 @@ services:
   # Proxy NGINX
   pluto_nginx:
     container_name: pluto_nginx
-    image: nginx:1.21.1-alpine
+    image: nginx:1.21.6-alpine
     restart: always
     volumes:
       - ./services/nginx/hosts:/etc/nginx/conf.d
@@ -17,15 +17,13 @@ services:
   # Database (PostgreSQL)
   pluto_db:
     container_name: pluto_db
-    image: postgres:13.3-alpine
+    image: postgres:14.2-alpine3.15
     environment:
       POSTGRES_PASSWORD: ${PLUTO_DB_PASSWORD}
     volumes:
       - pluto_db:/var/lib/postgresql/data
       - ./services/db/init/:/docker-entrypoint-initdb.d/
       - /etc/localtime:/etc/localtime:ro
-    ports:
-      - '${PLUTO_DB_PORT}:5432'
     expose:
       - '5432'
 

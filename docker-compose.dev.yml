@@ -1,0 +1,4 @@
+services:
+  pluto_db:
+    ports:
+        - '${PLUTO_DB_PORT}:5432'
